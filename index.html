@@ -1,0 +1,526 @@
+<meta http-equiv="refresh" content="60">
+<title>NIFTY OI Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#f3f5f9; --surface:#ffffff; --surface2:#e9edf4; --line:#d3d9e4; --line2:#e3e7ef;
+  --ink:#141c2e; --ink2:#4a5568; --ink3:#7b8494; --head:#243b6b; --headInk:#ffffff;
+  --accent:#243b6b; --accentInk:#ffffff;
+  --lb:#1b8f3a; --sb:#d32f2f; --sc:#158a5c; --lu:#e06a00; --warn:#8a6d00; --be:#ff9800;
+  --ce:#d9480f; --pe:#1d6fb8; --ceSoft:rgba(217,72,15,.16); --peSoft:rgba(29,111,184,.16);
+  --atm:rgba(36,59,107,.10); --grid:#e5e9f1; --shadow:0 1px 2px rgba(20,28,46,.06);
+  --focus:#243b6b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a1120; --surface:#0d1526; --surface2:#142038; --line:#243252; --line2:#1b2740;
+    --ink:#e6ebf5; --ink2:#a9b4c9; --ink3:#6f7c96; --head:#243b6b; --headInk:#ffffff;
+    --accent:#5b8def; --accentInk:#0a1120;
+    --lb:#2fbf58; --sb:#ef5350; --sc:#3bffa0; --lu:#ff7700; --warn:#d4b12a; --be:#ff9800;
+    --ce:#e35a2f; --pe:#2b96d9; --ceSoft:rgba(227,90,47,.20); --peSoft:rgba(43,150,217,.20);
+    --atm:rgba(91,141,239,.12); --grid:#1b2740; --shadow:none; --focus:#5b8def;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a1120; --surface:#0d1526; --surface2:#142038; --line:#243252; --line2:#1b2740;
+  --ink:#e6ebf5; --ink2:#a9b4c9; --ink3:#6f7c96; --head:#243b6b; --headInk:#ffffff;
+  --accent:#5b8def; --accentInk:#0a1120;
+  --lb:#2fbf58; --sb:#ef5350; --sc:#3bffa0; --lu:#ff7700; --warn:#d4b12a; --be:#ff9800;
+  --ce:#e35a2f; --pe:#2b96d9; --ceSoft:rgba(227,90,47,.20); --peSoft:rgba(43,150,217,.20);
+  --atm:rgba(91,141,239,.12); --grid:#1b2740; --shadow:none; --focus:#5b8def;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;padding-inline:16px;padding-block:0 40px}
+.mono{font-family:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;font-variant-numeric:tabular-nums}
+.num{font-family:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;font-variant-numeric:tabular-nums}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto}
+
+/* top bar */
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding-block:14px 12px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:10px;margin-right:auto}
+.brand h1{margin:0;font-size:18px;font-weight:600;letter-spacing:.01em}
+.brand .sub{font-size:12px;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em}
+.ctl{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2)}
+.ctl label{text-transform:uppercase;letter-spacing:.06em;font-size:11px;color:var(--ink3)}
+select,input[type=number],input[type=text]{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:5px 8px;min-height:32px}
+input[type=number]{width:74px}
+.btn{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:5px 11px;min-height:32px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--surface2)}
+.btn.primary{background:var(--accent);color:var(--accentInk);border-color:transparent;font-weight:600}
+.btn.small{min-height:26px;padding:2px 8px;font-size:12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.seg button{background:var(--surface);border:0;padding:5px 10px;min-height:32px;cursor:pointer;color:var(--ink2)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accentInk);font-weight:600}
+.seg button+button{border-left:1px solid var(--line)}
+
+.status{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding-block:10px;font-size:12px;color:var(--ink3)}
+.status b{color:var(--ink2);font-weight:500}
+.tag{display:inline-block;padding:1px 7px;border-radius:3px;font-size:11px;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line);color:var(--ink2)}
+.tag.sample{border-color:var(--warn);color:var(--warn)}
+
+/* grid */
+.row2{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:16px;margin-top:6px;align-items:start}
+@media (max-width:820px){.row2{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow);overflow:hidden}
+.panel-h{display:flex;align-items:center;gap:10px;background:var(--head);color:var(--headInk);padding:6px 12px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.panel-h .r{margin-left:auto;font-weight:400;opacity:.85;text-transform:none;letter-spacing:0}
+.panel-b{padding:10px 12px}
+
+/* OI box (TV-style rows) */
+.oibox{display:grid;grid-template-columns:auto 1fr;font-size:13px}
+.oibox>div{padding:6px 8px;border-bottom:1px solid var(--line2)}
+.oibox>div:nth-child(4n+1),.oibox>div:nth-child(4n+2){background:var(--surface2)}
+.oibox .k{color:var(--ink2);white-space:nowrap}
+.oibox .v{text-align:right;white-space:nowrap}
+.oibox .v.big{font-size:20px;font-weight:700;letter-spacing:.02em;line-height:1.1}
+.chg{margin-left:8px}
+.pos{color:var(--lb)} .neg{color:var(--sb)} .neu{color:var(--ink3)}
+.c-LB{color:var(--lb)} .c-SB{color:var(--sb)} .c-SC{color:var(--sc)} .c-LU{color:var(--lu)}
+.fourway{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.fourway div{border:1px solid var(--line2);border-radius:4px;padding:6px 8px;background:var(--surface)}
+.fourway .l{font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.fourway .n{font-size:13px;margin-top:2px}
+.bar4{display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--surface2);margin-top:8px;gap:2px}
+.bar4 i{display:block;height:100%}
+.note{font-size:12px;color:var(--ink3);margin-top:8px}
+
+/* verdict */
+.verdict{display:flex;flex-direction:column;gap:12px}
+.vhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.vpill{font-size:22px;font-weight:700;letter-spacing:.04em;padding:6px 14px;border-radius:5px;border:2px solid currentColor;line-height:1.1}
+.vscore{font-size:12px;color:var(--ink3)}
+.meter{position:relative;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--sb),var(--surface2) 50%,var(--lb));flex:1;min-width:140px}
+.meter i{position:absolute;top:-4px;width:4px;height:16px;border-radius:2px;background:var(--ink);transform:translateX(-50%)}
+.reasons{margin:0;padding:0;list-style:none;display:grid;gap:5px;font-size:13px}
+.reasons li{display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:start}
+.reasons .pt{font-family:"IBM Plex Mono",monospace;font-weight:600;text-align:right}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:520px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{border:1px solid var(--line2);border-radius:4px;padding:8px 10px;background:var(--surface)}
+.kpi .l{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.kpi .n{font-size:17px;font-weight:600;margin-top:2px}
+.kpi .s{font-size:11px;color:var(--ink3)}
+
+/* chart */
+.chart-h{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line2)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--ink2);margin-left:auto}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:2px;display:inline-block}
+.legend i.o{background:transparent;border:2px solid var(--ink3)}
+.chart-wrap{position:relative;padding:8px 6px 4px}
+svg{display:block;width:100%;height:auto}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:6px 9px;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.18);white-space:nowrap;z-index:5;display:none}
+.tip b{display:block;margin-bottom:2px}
+.rangebox{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink2)}
+input[type=range]{accent-color:var(--accent);width:120px}
+
+/* table */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:5px 8px;text-align:right;border-bottom:1px solid var(--line2);white-space:nowrap}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);font-weight:600;position:sticky;top:0;background:var(--surface)}
+td.strike,th.strike{text-align:center;font-weight:600;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+tr.atm td{background:var(--atm)}
+td .mk{font-size:10px;letter-spacing:.06em;text-transform:uppercase;margin-left:6px;padding:0 5px;border-radius:3px;border:1px solid currentColor}
+.tablewrap{overflow-x:auto;max-height:420px;overflow-y:auto}
+.cebg{background:var(--ceSoft)} .pebg{background:var(--peSoft)}
+
+/* paste */
+details.paste{margin-top:16px}
+details.paste summary{cursor:pointer;font-weight:600;padding:8px 0;list-style:none;display:flex;align-items:center;gap:8px}
+details.paste summary::-webkit-details-marker{display:none}
+details.paste summary::before{content:"▸";color:var(--ink3)}
+details[open].paste summary::before{content:"▾"}
+.pastegrid{display:grid;grid-template-columns:1fr minmax(260px,360px);gap:14px}
+@media (max-width:820px){.pastegrid{grid-template-columns:1fr}}
+textarea{width:100%;min-height:200px;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:8px;font-family:"IBM Plex Mono",monospace;font-size:12px;resize:vertical}
+pre{background:var(--surface2);border:1px solid var(--line2);border-radius:4px;padding:8px 10px;font-size:11.5px;overflow-x:auto;margin:6px 0 10px;font-family:"IBM Plex Mono",monospace}
+.msg{font-size:12px;margin-top:6px;min-height:16px}
+.msg.err{color:var(--sb)} .msg.ok{color:var(--lb)}
+.fmt h4{margin:8px 0 2px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+.fmt p{margin:2px 0 6px;font-size:12px;color:var(--ink2)}
+.foot{margin-top:22px;font-size:11.5px;color:var(--ink3);max-width:70ch}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (prefers-reduced-motion:no-preference){.meter i{transition:left .4s ease}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><h1>OI Desk</h1><span class="sub">FUT buildup + option chain</span></div>
+    <div class="ctl"><label for="sym">Index</label>
+      <select id="sym">
+        <option value="NIFTY">NIFTY</option><option value="BANKNIFTY">BANKNIFTY</option>
+        <option value="FINNIFTY">FINNIFTY</option><option value="MIDCPNIFTY">MIDCPNIFTY</option>
+      </select></div>
+    <div class="ctl"><label for="lot">Lot</label><input type="number" id="lot" min="1" step="1" value="65"></div>
+    <div class="ctl"><label for="unit">Units</label>
+      <div class="seg" id="unit"><button type="button" data-u="units" aria-pressed="true">Units</button><button type="button" data-u="lots" aria-pressed="false">Lots</button></div></div>
+    <button type="button" class="btn" id="themeBtn" title="Theme">◐ Theme</button>
+    <button type="button" class="btn primary" id="pasteBtn">Paste data</button>
+  </header>
+
+  <div class="status">
+    <span id="srcTag" class="tag sample">Sample data</span>
+    <span>As of <b id="asof">—</b></span>
+    <span>Expiry <b id="expiry">—</b></span>
+    <span>Spot <b class="num" id="spot">—</b></span>
+    <span>Fut <b class="num" id="futpx">—</b></span>
+    <span>Basis <b class="num" id="basis">—</b></span>
+    <span id="saveState"></span>
+  </div>
+
+  <div class="row2">
+    <section class="panel" aria-labelledby="oih">
+      <div class="panel-h" id="oih">Open Interest – Box <span class="r" id="contractName">NIFTY FUT</span></div>
+      <div class="panel-b">
+        <div class="oibox" id="oibox"></div>
+        <div class="fourway" id="fourway"></div>
+        <div class="bar4" id="bar4"></div>
+        <div class="note" id="oinote"></div>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="vh">
+      <div class="panel-h" id="vh">Verdict <span class="r">FUT buildup + ATM ±2 option OI</span></div>
+      <div class="panel-b verdict">
+        <div class="vhead">
+          <span class="vpill" id="vpill">—</span>
+          <div class="meter" aria-hidden="true"><i id="vneedle" style="left:50%"></i></div>
+          <span class="vscore" id="vscore"></span>
+        </div>
+        <ul class="reasons" id="reasons"></ul>
+        <div class="kpis">
+          <div class="kpi"><div class="l">PCR (total)</div><div class="n num" id="pcrT">—</div><div class="s" id="pcrTs"></div></div>
+          <div class="kpi"><div class="l">PCR (ATM ±2)</div><div class="n num" id="pcrA">—</div><div class="s" id="pcrAs"></div></div>
+          <div class="kpi"><div class="l">Max pain</div><div class="n num" id="maxpain">—</div><div class="s" id="maxpains"></div></div>
+          <div class="kpi"><div class="l">Support / Resistance</div><div class="n num" id="sr">—</div><div class="s">highest PE OI / highest CE OI</div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel" style="margin-top:16px" aria-labelledby="ch">
+    <div class="chart-h">
+      <span id="ch" style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--ink2)">Option chain</span>
+      <div class="seg" id="mode"><button type="button" data-m="oi" aria-pressed="true">OI</button><button type="button" data-m="chg" aria-pressed="false">OI change</button></div>
+      <div class="rangebox"><label for="range">ATM ±</label><input type="range" id="range" min="3" max="20" value="8"><span class="num" id="rangeV">8</span> strikes</div>
+      <div class="legend"><span><i style="background:var(--ce)"></i>CE (calls)</span><span><i style="background:var(--pe)"></i>PE (puts)</span><span id="legOut" hidden><i class="o"></i>OI reduced</span></div>
+    </div>
+    <div class="chart-wrap"><svg id="chart" role="img" aria-labelledby="chartTitle"><title id="chartTitle">Strike-wise CE and PE open interest</title></svg><div class="tip" id="tip"></div></div>
+    <details style="border-top:1px solid var(--line2)">
+      <summary style="cursor:pointer;padding:8px 12px;font-size:12px;color:var(--ink2)">Table view</summary>
+      <div class="tablewrap"><table id="tbl"></table></div>
+    </details>
+  </section>
+
+  <details class="paste" id="pasteBox">
+    <summary>Paste your data <span class="tag">JSON · CSV · NSE option-chain JSON</span></summary>
+    <div class="pastegrid">
+      <div>
+        <textarea id="pasteTa" placeholder="Yahan paste karo…" spellcheck="false"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <button type="button" class="btn primary" id="loadBtn">Load</button>
+          <button type="button" class="btn" id="sampleBtn">Back to sample</button>
+          <button type="button" class="btn" id="copyBtn">Copy current as JSON</button>
+        </div>
+        <div class="msg" id="pasteMsg"></div>
+      </div>
+      <div class="fmt">
+        <h4>JSON (full)</h4>
+        <pre>{"symbol":"NIFTY","lot":65,"spot":23477.8,
+ "expiry":"2026-09-16","asof":"2026-09-10 15:30",
+ "fut":{"price":23484,"prevPrice":23552.2,
+        "oi":18329740,"prevOi":18403970,
+        "oiNext":2810000,"prevOiNext":2476565,
+        "today":{"LB":279000,"SB":616500,
+                 "SC":-112500,"LU":0}},
+ "chain":[{"strike":23500,"ceOi":1350000,"ceChg":210000,
+           "peOi":1120000,"peChg":-40000}, …]}</pre>
+        <h4>CSV (chain only)</h4>
+        <pre>strike,ceOi,ceChg,peOi,peChg
+23450,980000,120000,1450000,60000</pre>
+        <p>CSV me sirf chain aata hai — FUT box pehle wala data rakhta hai. NSE ka option-chain JSON (<code>records.data</code>) seedha paste ho sakta hai; expiry ki pehli entry li jaati hai.</p>
+        <p>Paste kiya data sirf is browser me save rehta hai — link kisi ko bhejoge to use sample data dikhega jab tak wo apna data paste na kare.</p>
+      </div>
+    </div>
+  </details>
+
+  <p class="foot">Buildup: Price ↑ OI ↑ = LONG BUILDUP · Price ↓ OI ↑ = SHORT BUILDUP · Price ↑ OI ↓ = SHORT COVERING · Price ↓ OI ↓ = LONG UNWINDING. Verdict ek heuristic score hai (FUT buildup ±2, ATM ±2 writer activity ±1, PCR ±1) — trade ka faisla nahi, sirf bias ka summary.</p>
+</div>
+
+<!--OIDATA--><script id="oidata" type="application/json">{"datasets":{"NIFTY":{"symbol":"NIFTY","lot":65,"spot":23398.1,"expiry":"2026-09-15","asof":"2026-09-14 23:44","fut":{"expiry":"2026-09-29","price":null,"oi":null,"prevPrice":23485.2,"prevOi":17933110.0,"oiNext":null,"prevOiNext":3140020.0},"chain":[{"strike":21700,"ceOi":0.0,"ceChg":0.0,"peOi":6019455.0,"peChg":4393740.0,"ceLtp":2900.2,"peLtp":1.3},{"strike":21750,"ceOi":0.0,"ceChg":0.0,"peOi":1010555.0,"peChg":546195.0,"ceLtp":2850.9,"peLtp":1.3},{"strike":21800,"ceOi":0.0,"ceChg":0.0,"peOi":2336620.0,"peChg":1658865.0,"ceLtp":2801.65,"peLtp":1.25},{"strike":21850,"ceOi":0.0,"ceChg":0.0,"peOi":294580.0,"peChg":239850.0,"ceLtp":2752.45,"peLtp":1.55},{"strike":21900,"ceOi":0.0,"ceChg":0.0,"peOi":3095755.0,"peChg":941785.0,"ceLtp":2703.3,"peLtp":1.5},{"strike":21950,"ceOi":0.0,"ceChg":0.0,"peOi":1001130.0,"peChg":858000.0,"ceLtp":2654.25,"peLtp":1.75},{"strike":22000,"ceOi":2405.0,"ceChg":-3575.0,"peOi":7904000.0,"peChg":5010135.0,"ceLtp":1448.25,"peLtp":1.7},{"strike":22050,"ceOi":0.0,"ceChg":0.0,"peOi":723255.0,"peChg":95745.0,"ceLtp":2556.4,"peLtp":1.8},{"strike":22100,"ceOi":0.0,"ceChg":0.0,"peOi":3033745.0,"peChg":-991315.0,"ceLtp":2507.55,"peLtp":1.55},{"strike":22150,"ceOi":0.0,"ceChg":0.0,"peOi":882050.0,"peChg":69615.0,"ceLtp":2458.85,"peLtp":1.8},{"strike":22200,"ceOi":0.0,"ceChg":0.0,"peOi":4374045.0,"peChg":1241825.0,"ceLtp":2410.3,"peLtp":1.6},{"strike":22250,"ceOi":0.0,"ceChg":0.0,"peOi":1393665.0,"peChg":716040.0,"ceLtp":2361.8,"peLtp":1.95},{"strike":22300,"ceOi":2925.0,"ceChg":-1950.0,"peOi":2744170.0,"peChg":1361815.0,"ceLtp":1159.05,"peLtp":2.05},{"strike":22350,"ceOi":0.0,"ceChg":0.0,"peOi":743990.0,"peChg":331695.0,"ceLtp":2265.3,"peLtp":2.3},{"strike":22400,"ceOi":715.0,"ceChg":195.0,"peOi":4976790.0,"peChg":1538615.0,"ceLtp":1062.75,"peLtp":2.6},{"strike":22450,"ceOi":0.0,"ceChg":0.0,"peOi":903110.0,"peChg":179010.0,"ceLtp":2169.4,"peLtp":2.7},{"strike":22500,"ceOi":21775.0,"ceChg":-780.0,"peOi":9479990.0,"peChg":1372085.0,"ceLtp":961.6,"peLtp":2.9},{"strike":22550,"ceOi":0.0,"ceChg":0.0,"peOi":1420575.0,"peChg":722150.0,"ceLtp":2074.25,"peLtp":3.2},{"strike":22600,"ceOi":6110.0,"ceChg":4680.0,"peOi":3671135.0,"peChg":1235325.0,"ceLtp":858.2,"peLtp":3.6},{"strike":22650,"ceOi":1170.0,"ceChg":1105.0,"peOi":1354925.0,"peChg":712530.0,"ceLtp":780.0,"peLtp":4.0},{"strike":22700,"ceOi":42965.0,"ceChg":20150.0,"peOi":5013190.0,"peChg":2353650.0,"ceLtp":759.0,"peLtp":4.55},{"strike":22750,"ceOi":19630.0,"ceChg":18330.0,"peOi":2557295.0,"peChg":1466335.0,"ceLtp":715.35,"peLtp":5.4},{"strike":22800,"ceOi":87360.0,"ceChg":44850.0,"peOi":6416020.0,"peChg":1653145.0,"ceLtp":668.0,"peLtp":5.9},{"strike":22850,"ceOi":32630.0,"ceChg":31330.0,"peOi":3371810.0,"peChg":1938430.0,"ceLtp":618.35,"peLtp":6.7},{"strike":22900,"ceOi":95875.0,"ceChg":57525.0,"peOi":6815445.0,"peChg":3346005.0,"ceLtp":570.2,"peLtp":8.1},{"strike":22950,"ceOi":62920.0,"ceChg":54730.0,"peOi":3540160.0,"peChg":669175.0,"ceLtp":516.35,"peLtp":9.0},{"strike":23000,"ceOi":388505.0,"ceChg":46475.0,"peOi":12972245.0,"peChg":2357875.0,"ceLtp":474.8,"peLtp":11.65},{"strike":23050,"ceOi":124800.0,"ceChg":94250.0,"peOi":3231085.0,"peChg":550615.0,"ceLtp":412.9,"peLtp":14.0},{"strike":23100,"ceOi":361660.0,"ceChg":216645.0,"peOi":7961265.0,"peChg":2145910.0,"ceLtp":380.0,"peLtp":17.5},{"strike":23150,"ceOi":271505.0,"ceChg":209105.0,"peOi":4325230.0,"peChg":2370420.0,"ceLtp":337.0,"peLtp":22.3},{"strike":23200,"ceOi":1163435.0,"ceChg":800020.0,"peOi":11843520.0,"peChg":4450940.0,"ceLtp":288.5,"peLtp":28.2},{"strike":23250,"ceOi":1409525.0,"ceChg":1211990.0,"peOi":8239140.0,"peChg":6376565.0,"ceLtp":246.75,"peLtp":36.0},{"strike":23300,"ceOi":2823925.0,"ceChg":1894100.0,"peOi":14205620.0,"peChg":7963085.0,"ceLtp":210.05,"peLtp":44.65},{"strike":23350,"ceOi":2144545.0,"ceChg":1483040.0,"peOi":6312280.0,"peChg":2896855.0,"ceLtp":170.55,"peLtp":56.75},{"strike":23400,"ceOi":6543875.0,"ceChg":840515.0,"peOi":9096880.0,"peChg":1110395.0,"ceLtp":133.6,"peLtp":70.4},{"strike":23450,"ceOi":4219540.0,"ceChg":-791050.0,"peOi":3558685.0,"peChg":398580.0,"ceLtp":103.4,"peLtp":90.6},{"strike":23500,"ceOi":9566505.0,"ceChg":-2143050.0,"peOi":4342260.0,"peChg":-1902420.0,"ceLtp":75.65,"peLtp":112.75},{"strike":23550,"ceOi":5026970.0,"ceChg":261885.0,"peOi":926120.0,"peChg":-478400.0,"ceLtp":54.35,"peLtp":141.0},{"strike":23600,"ceOi":8072675.0,"ceChg":-158925.0,"peOi":1423240.0,"peChg":-842790.0,"ceLtp":37.7,"peLtp":175.0},{"strike":23650,"ceOi":5056870.0,"ceChg":-59280.0,"peOi":528840.0,"peChg":-273975.0,"ceLtp":25.35,"peLtp":215.4},{"strike":23700,"ceOi":10501270.0,"ceChg":1367210.0,"peOi":1505205.0,"peChg":-698490.0,"ceLtp":16.9,"peLtp":251.1},{"strike":23750,"ceOi":5425875.0,"ceChg":347945.0,"peOi":441155.0,"peChg":-477360.0,"ceLtp":10.65,"peLtp":302.3},{"strike":23800,"ceOi":11720670.0,"ceChg":2188485.0,"peOi":1031810.0,"peChg":-649090.0,"ceLtp":7.1,"peLtp":345.0},{"strike":23850,"ceOi":3023085.0,"ceChg":-630045.0,"peOi":217490.0,"peChg":-100880.0,"ceLtp":5.4,"peLtp":393.5},{"strike":23900,"ceOi":7417150.0,"ceChg":-674310.0,"peOi":1115335.0,"peChg":-442260.0,"ceLtp":4.2,"peLtp":442.0},{"strike":23950,"ceOi":3060785.0,"ceChg":-283920.0,"peOi":116545.0,"peChg":-49530.0,"ceLtp":3.5,"peLtp":490.6},{"strike":24000,"ceOi":14035060.0,"ceChg":96265.0,"peOi":1326390.0,"peChg":-607880.0,"ceLtp":2.75,"peLtp":540.0},{"strike":24050,"ceOi":2648750.0,"ceChg":7150.0,"peOi":73580.0,"peChg":-28990.0,"ceLtp":2.15,"peLtp":594.35},{"strike":24100,"ceOi":5893485.0,"ceChg":-697125.0,"peOi":367965.0,"peChg":-181740.0,"ceLtp":1.8,"peLtp":641.0},{"strike":24150,"ceOi":2317055.0,"ceChg":123240.0,"peOi":66755.0,"peChg":-6500.0,"ceLtp":1.4,"peLtp":693.8},{"strike":24200,"ceOi":5486715.0,"ceChg":-1095640.0,"peOi":410670.0,"peChg":-137475.0,"ceLtp":1.15,"peLtp":737.5},{"strike":24250,"ceOi":1807390.0,"ceChg":-58500.0,"peOi":44785.0,"peChg":-7605.0,"ceLtp":1.1,"peLtp":799.2},{"strike":24300,"ceOi":3797885.0,"ceChg":-1562925.0,"peOi":202605.0,"peChg":-46670.0,"ceLtp":1.0,"peLtp":840.0},{"strike":24350,"ceOi":1068535.0,"ceChg":-2217930.0,"peOi":38545.0,"peChg":-9620.0,"ceLtp":0.85,"peLtp":903.95},{"strike":24400,"ceOi":5164185.0,"ceChg":-1757925.0,"peOi":143780.0,"peChg":-67600.0,"ceLtp":1.0,"peLtp":939.6},{"strike":24450,"ceOi":704730.0,"ceChg":-538850.0,"peOi":15340.0,"peChg":-2535.0,"ceLtp":0.55,"peLtp":1011.95},{"strike":24500,"ceOi":10325380.0,"ceChg":-839475.0,"peOi":318370.0,"peChg":-107055.0,"ceLtp":0.95,"peLtp":1043.0},{"strike":24550,"ceOi":918450.0,"ceChg":-417820.0,"peOi":20215.0,"peChg":-4160.0,"ceLtp":0.7,"peLtp":1095.0},{"strike":24600,"ceOi":3178175.0,"ceChg":-877175.0,"peOi":92430.0,"peChg":-46280.0,"ceLtp":0.75,"peLtp":1141.6},{"strike":24650,"ceOi":1087710.0,"ceChg":50375.0,"peOi":8775.0,"peChg":-3705.0,"ceLtp":0.75,"peLtp":1216.65},{"strike":24700,"ceOi":2524925.0,"ceChg":-791505.0,"peOi":25155.0,"peChg":-10725.0,"ceLtp":0.65,"peLtp":1244.5},{"strike":24750,"ceOi":957450.0,"ceChg":-51805.0,"peOi":3965.0,"peChg":-585.0,"ceLtp":0.55,"peLtp":1320.0},{"strike":24800,"ceOi":3031730.0,"ceChg":-1476020.0,"peOi":24960.0,"peChg":-19370.0,"ceLtp":0.5,"peLtp":1341.25},{"strike":24850,"ceOi":767325.0,"ceChg":-144950.0,"peOi":0.0,"peChg":0.0,"ceLtp":0.45,"peLtp":629.7},{"strike":24900,"ceOi":991705.0,"ceChg":-1924585.0,"peOi":13585.0,"peChg":-9165.0,"ceLtp":0.45,"peLtp":1461.0},{"strike":24950,"ceOi":551070.0,"ceChg":-204555.0,"peOi":0.0,"peChg":0.0,"ceLtp":0.4,"peLtp":689.2},{"strike":25000,"ceOi":5542095.0,"ceChg":-3004885.0,"peOi":84760.0,"peChg":-46995.0,"ceLtp":0.35,"peLtp":1535.4},{"strike":25050,"ceOi":479180.0,"ceChg":-263055.0,"peOi":65.0,"peChg":0.0,"ceLtp":0.3,"peLtp":1730.0},{"strike":25100,"ceOi":660855.0,"ceChg":-1856790.0,"peOi":6435.0,"peChg":-1170.0,"ceLtp":0.3,"peLtp":1672.0},{"strike":25150,"ceOi":363870.0,"ceChg":-250835.0,"peOi":325.0,"peChg":0.0,"ceLtp":0.3,"peLtp":1585.0},{"strike":25200,"ceOi":1467895.0,"ceChg":-2471560.0,"peOi":3185.0,"peChg":-130.0,"ceLtp":0.35,"peLtp":1758.35},{"strike":25250,"ceOi":796445.0,"ceChg":-20800.0,"peOi":520.0,"peChg":0.0,"ceLtp":0.3,"peLtp":1685.0},{"strike":25300,"ceOi":842660.0,"ceChg":-1320540.0,"peOi":3900.0,"peChg":0.0,"ceLtp":0.25,"peLtp":1865.4},{"strike":25350,"ceOi":161005.0,"ceChg":-250835.0,"peOi":0.0,"peChg":0.0,"ceLtp":0.4,"peLtp":956.1},{"strike":25400,"ceOi":539630.0,"ceChg":-963300.0,"peOi":1625.0,"peChg":0.0,"ceLtp":0.25,"peLtp":2040.0},{"strike":25450,"ceOi":268645.0,"ceChg":-92430.0,"peOi":1430.0,"peChg":0.0,"ceLtp":0.45,"peLtp":1885.0},{"strike":25500,"ceOi":1770145.0,"ceChg":-1867645.0,"peOi":62660.0,"peChg":-37700.0,"ceLtp":0.35,"peLtp":2046.35},{"strike":25550,"ceOi":209950.0,"ceChg":-89245.0,"peOi":520.0,"peChg":0.0,"ceLtp":0.25,"peLtp":2140.0},{"strike":25600,"ceOi":481585.0,"ceChg":-103480.0,"peOi":260.0,"peChg":0.0,"ceLtp":0.25,"peLtp":2280.0},{"strike":25650,"ceOi":58110.0,"ceChg":-6955.0,"peOi":585.0,"peChg":0.0,"ceLtp":0.35,"peLtp":1940.0},{"strike":25700,"ceOi":277095.0,"ceChg":-66950.0,"peOi":0.0,"peChg":0.0,"ceLtp":0.3,"peLtp":1223.4},{"strike":25750,"ceOi":52455.0,"ceChg":1755.0,"peOi":0.0,"peChg":0.0,"ceLtp":0.3,"peLtp":1263.75},{"strike":25800,"ceOi":818480.0,"ceChg":-169325.0,"peOi":520.0,"peChg":-130.0,"ceLtp":0.25,"peLtp":2350.0},{"strike":25850,"ceOi":59605.0,"ceChg":-8970.0,"peOi":0.0,"peChg":0.0,"ceLtp":0.3,"peLtp":1345.95},{"strike":25900,"ceOi":298480.0,"ceChg":-543270.0,"peOi":0.0,"peChg":0.0,"ceLtp":0.35,"peLtp":1387.75},{"strike":25950,"ceOi":65260.0,"ceChg":7735.0,"peOi":0.0,"peChg":0.0,"ceLtp":0.35,"peLtp":1430.0},{"strike":26000,"ceOi":1577810.0,"ceChg":-537875.0,"peOi":60060.0,"peChg":-34060.0,"ceLtp":0.3,"peLtp":2543.85},{"strike":26050,"ceOi":75660.0,"ceChg":13195.0,"peOi":0.0,"peChg":0.0,"ceLtp":0.3,"peLtp":1515.75},{"strike":26100,"ceOi":156390.0,"ceChg":-35555.0,"peOi":0.0,"peChg":0.0,"ceLtp":0.35,"peLtp":1559.2},{"strike":26150,"ceOi":94120.0,"ceChg":-30940.0,"peOi":0.0,"peChg":0.0,"ceLtp":0.35,"peLtp":1603.05},{"strike":26200,"ceOi":408070.0,"ceChg":-7670.0,"peOi":0.0,"peChg":0.0,"ceLtp":0.3,"peLtp":1647.25}]}},"built":"2026-09-14 23:44:18"}</script><!--/OIDATA-->
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const LOTS={NIFTY:65,BANKNIFTY:30,FINNIFTY:65,MIDCPNIFTY:140};
+const STEP={NIFTY:50,BANKNIFTY:100,FINNIFTY:50,MIDCPNIFTY:25};
+
+/* ---------- sample dataset (illustrative, NIFTY-style, marked as sample) ---------- */
+function makeSample(){
+  const spot=23477.8, strikes=[];
+  for(let k=22800;k<=24200;k+=50) strikes.push(k);
+  const atm=23500;
+  const chain=strikes.map(s=>{
+    const d=(s-atm)/50;
+    // CE OI heavy above spot, PE OI heavy below; round-number strikes bigger
+    const ceBase= d>=0 ? 900000*Math.exp(-Math.abs(d-2)/4) : 300000*Math.exp(-Math.abs(d)/2);
+    const peBase= d<=0 ? 950000*Math.exp(-Math.abs(d+2)/4) : 280000*Math.exp(-Math.abs(d)/2);
+    const bump=(s%500===0)?1.8:(s%100===0)?1.25:1;
+    const ceOi=Math.round(ceBase*bump/1000)*1000, peOi=Math.round(peBase*bump/1000)*1000;
+    const ceChg=Math.round((d>=0? ceOi*0.18*(d===2||d===4?1.6:1) : -ceOi*0.12)/500)*500;
+    const peChg=Math.round((d<=0? peOi*0.14*(d===-2?1.5:1) : -peOi*0.10)/500)*500;
+    return {strike:s,ceOi,ceChg,peOi,peChg};
+  });
+  return {symbol:"NIFTY",lot:65,spot,expiry:"2026-09-16",asof:"2026-09-10 15:30",sample:true,
+    fut:{price:23484,prevPrice:23552.2,oi:18329740,prevOi:18245890,oiNext:2810000,prevOiNext:2476565,
+         today:{LB:120000,SB:480000,SC:-300000,LU:-216150}},
+    chain};
+}
+
+/* ---------- state ---------- */
+let state={symbol:"NIFTY",datasets:{NIFTY:makeSample()},unit:"units",mode:"oi",range:8};
+
+function ls(k,v){try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){return null}}
+
+/* ---------- formatting ---------- */
+function fmtIN(n,dec){ // Indian Cr/L/K
+  if(n==null||isNaN(n)) return "—";
+  const a=Math.abs(n), s=n<0?"−":"";
+  if(a>=1e7) return s+(a/1e7).toFixed(dec==null?2:dec)+"Cr";
+  if(a>=1e5) return s+(a/1e5).toFixed(dec==null?2:dec)+"L";
+  if(a>=1e3) return s+(a/1e3).toFixed(dec==null?1:dec)+"K";
+  return s+Math.round(a).toString();
+}
+function fmtSigned(n,dec){ if(n==null||isNaN(n)) return "—"; return (n>0?"+":n<0?"−":"")+fmtIN(Math.abs(n),dec); }
+function pct(a,b){ if(!b) return "—"; const p=a/b*100; return (p>0?"+":"")+p.toFixed(2)+"%"; }
+function cls(n){ return n>0?"pos":n<0?"neg":"neu"; }
+function px(n){ return n==null?"—":Number(n).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function toUnit(n){ const d=cur(); if(state.unit==="lots"&&d.lot) return n/d.lot; return n; }
+function fmtU(n,dec){ return fmtIN(toUnit(n),dec); }
+function fmtUS(n,dec){ return fmtSigned(toUnit(n),dec); }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function cur(){ return state.datasets[state.symbol]; }
+
+/* ---------- analytics ---------- */
+const BU={LB:"LONG BUILDUP",SB:"SHORT BUILDUP",SC:"SHORT COVERING",LU:"LONG UNWINDING"};
+function buildup(dp,dOi){
+  if(dp==null||dOi==null) return null;
+  if(dp>=0&&dOi>=0) return "LB"; if(dp<0&&dOi>0) return "SB"; if(dp>0&&dOi<0) return "SC"; return "LU";
+}
+function atmStrike(d){ let best=null,bd=Infinity; for(const r of d.chain){const x=Math.abs(r.strike-d.spot); if(x<bd){bd=x;best=r.strike;}} return best; }
+function maxPain(chain){
+  let best=null,bv=Infinity;
+  for(const S of chain){ let v=0; for(const K of chain){ v+=K.ceOi*Math.max(0,S.strike-K.strike)+K.peOi*Math.max(0,K.strike-S.strike);} if(v<bv){bv=v;best=S.strike;} }
+  return best;
+}
+function analyse(d){
+  const f=d.fut||{}, chain=[...d.chain].sort((a,b)=>a.strike-b.strike);
+  const dp=f.price!=null&&f.prevPrice!=null?f.price-f.prevPrice:null;
+  const dOi=f.oi!=null&&f.prevOi!=null?f.oi-f.prevOi:null;
+  const bu=buildup(dp,dOi);
+  const atm=atmStrike(d), step=STEP[d.symbol]||50;
+  const near=chain.filter(r=>Math.abs(r.strike-atm)<=2*step+1);
+  const sum=(arr,k)=>arr.reduce((a,r)=>a+(r[k]||0),0);
+  const ceT=sum(chain,"ceOi"), peT=sum(chain,"peOi"), ceA=sum(near,"ceOi"), peA=sum(near,"peOi");
+  const ceAc=sum(near,"ceChg"), peAc=sum(near,"peChg");
+  const pcrT=ceT?peT/ceT:null, pcrA=ceA?peA/ceA:null;
+  const mp=maxPain(chain);
+  let sup=null,res=null; for(const r of chain){ if(!sup||r.peOi>sup.peOi) sup=r; if(!res||r.ceOi>res.ceOi) res=r; }
+  // verdict score
+  const reasons=[]; let score=0;
+  const buPts={LB:2,SB:-2,SC:1,LU:-1}[bu]||0; score+=buPts;
+  reasons.push({pt:buPts,txt:bu?`Futures: ${BU[bu]} (price ${fmtSigned(dp,1)}, OI ${fmtSigned(dOi)})`:"Futures: buildup data nahi"});
+  const wr=peAc-ceAc; const wrPts=Math.abs(wr)<Math.max(1,0.05*(ceA+peA))?0:(wr>0?1:-1); score+=wrPts;
+  reasons.push({pt:wrPts,txt:`ATM ±2 writers: PE OI ${fmtSigned(peAc)} vs CE OI ${fmtSigned(ceAc)} → ${wrPts>0?"put writers aage (support ban raha)":wrPts<0?"call writers aage (resistance ban raha)":"barabar"}`});
+  const pcrPts=pcrT==null?0:pcrT>1.2?1:pcrT<0.8?-1:0; score+=pcrPts;
+  reasons.push({pt:pcrPts,txt:`PCR ${pcrT==null?"—":pcrT.toFixed(2)} → ${pcrPts>0?"put-heavy (bullish lean)":pcrPts<0?"call-heavy (bearish lean)":"neutral band 0.8–1.2"}`});
+  const label=score>=2?"BULLISH":score<=-2?"BEARISH":"SIDEWAYS";
+  return {dp,dOi,bu,atm,step,near,ceT,peT,ceA,peA,ceAc,peAc,pcrT,pcrA,mp,sup,res,score,label,reasons,chain};
+}
+
+/* ---------- render: status + OI box ---------- */
+function renderTop(d,a){
+  $("srcTag").textContent=d.sample?"Sample data":d.auto?"Auto · Dhan":"Your data"; $("srcTag").className="tag"+(d.sample?" sample":"");
+  $("asof").textContent=d.asof||"—"; $("expiry").textContent=d.expiry||"—";
+  $("spot").textContent=px(d.spot); $("futpx").textContent=d.fut&&d.fut.price!=null?px(d.fut.price):"—";
+  const basis=d.fut&&d.fut.price!=null&&d.spot!=null?d.fut.price-d.spot:null;
+  $("basis").textContent=basis==null?"—":(basis>0?"+":"")+basis.toFixed(2)+(d.spot?" ("+pct(basis,d.spot)+")":"");
+  $("contractName").textContent=d.symbol+" FUT"+(d.expiry?" · "+d.expiry:"");
+  $("lot").value=d.lot||LOTS[d.symbol]||1;
+}
+function renderOiBox(d,a){
+  const f=d.fut||{}, rows=[];
+  const cc=a.bu?"c-"+a.bu:"neu";
+  rows.push(["BUILDUP",`<span class="${cc}">${a.bu?BU[a.bu]:"—"}</span>`,"big"]);
+  rows.push(["OI cur",`${fmtU(f.oi)}<span class="chg ${cls(a.dOi)}">${fmtUS(a.dOi)} (${a.dOi!=null?pct(a.dOi,f.prevOi):"—"})</span>`]);
+  if(f.oiNext!=null){ const dn=f.prevOiNext!=null?f.oiNext-f.prevOiNext:null; rows.push(["OI next",`${fmtU(f.oiNext)}<span class="chg ${cls(dn)}">${fmtUS(dn)}</span>`]); }
+  if(f.oi!=null&&f.oiNext!=null){ const coi=f.oi+f.oiNext; const pc=f.prevOi!=null&&f.prevOiNext!=null?f.prevOi+f.prevOiNext:null; const dc=pc!=null?coi-pc:null;
+    rows.push(["COI",`${fmtU(coi)}<span class="chg ${cls(dc)}">${fmtUS(dc)}</span>`]);
+    rows.push(["Rollover",`${(f.oiNext/coi*100).toFixed(2)} %`]); }
+  rows.push(["Fut price",`${px(f.price)}<span class="chg ${cls(a.dp)}">${a.dp==null?"":(a.dp>0?"+":"−")+Math.abs(a.dp).toFixed(2)+" ("+pct(a.dp,f.prevPrice)+")"}</span>`]);
+  rows.push(["Price vs OI",a.dp==null?"—":`<span class="${cc}">Price ${a.dp>=0?"↑":"↓"} · OI ${a.dOi>=0?"↑":"↓"}</span>`]);
+  if(a.dOi!=null&&f.price){ const money=a.dOi*f.price/1e7; rows.push(["Money",`<span class="${cls(money)}">${(money>0?"+":"−")+"₹"+Math.abs(money).toFixed(1)+" Cr"}</span> <span class="neu">OI chg × fut price</span>`]); }
+  $("oibox").innerHTML=rows.map(r=>`<div class="k">${r[0]}</div><div class="v num ${r[2]||""}">${r[1]}</div>`).join("");
+  const t=f.today||{}; const keys=["LB","SB","SC","LU"];
+  $("fourway").innerHTML=keys.map(k=>`<div><div class="l c-${k}">${k}</div><div class="n num">${t[k]!=null?fmtUS(t[k]):"—"}</div></div>`).join("");
+  const tot=keys.reduce((s,k)=>s+Math.abs(t[k]||0),0);
+  $("bar4").innerHTML=tot?keys.map(k=>`<i style="width:${Math.abs(t[k]||0)/tot*100}%;background:var(--${k.toLowerCase()})" title="${BU[k]}"></i>`).join(""):"";
+  const net=keys.reduce((s,k)=>s+(t[k]||0),0);
+  $("oinote").textContent=tot?`Today 4-way net ${fmtUS(net)} vs OI cur ${fmtUS(a.dOi)}${a.dOi!=null&&Math.abs(net-a.dOi)>Math.max(1,Math.abs(a.dOi))*0.02?" !":""} · LB long buildup · SB short buildup · SC short covering · LU long unwinding`:"Today ka 4-way breakup data me nahi hai (fut.today).";
+}
+
+/* ---------- render: verdict ---------- */
+function renderVerdict(d,a){
+  const col=a.label==="BULLISH"?"var(--lb)":a.label==="BEARISH"?"var(--sb)":"var(--warn)";
+  $("vpill").textContent=a.label; $("vpill").style.color=col;
+  $("vneedle").style.left=(50+a.score/4*50)+"%";
+  $("vscore").textContent=`score ${a.score>0?"+":""}${a.score} (−4 … +4)`;
+  $("reasons").innerHTML=a.reasons.map(r=>`<li><span class="pt ${cls(r.pt)}">${r.pt>0?"+":""}${r.pt}</span><span>${esc(r.txt)}</span></li>`).join("");
+  $("pcrT").textContent=a.pcrT==null?"—":a.pcrT.toFixed(2); $("pcrTs").textContent=`PE ${fmtU(a.peT)} / CE ${fmtU(a.ceT)}`;
+  $("pcrA").textContent=a.pcrA==null?"—":a.pcrA.toFixed(2); $("pcrAs").textContent=`${a.atm-2*a.step}–${a.atm+2*a.step}`;
+  $("maxpain").textContent=a.mp!=null?a.mp:"—"; $("maxpains").textContent=a.mp!=null&&d.spot?`spot ${d.spot<a.mp?"below":"above"} by ${Math.abs(d.spot-a.mp).toFixed(0)}`:"";
+  $("sr").textContent=(a.sup?a.sup.strike:"—")+" / "+(a.res?a.res.strike:"—");
+}
+
+/* ---------- render: chart ---------- */
+function renderChart(d,a){
+  const svg=$("chart"), mode=state.mode, step=a.step;
+  const rows=a.chain.filter(r=>Math.abs(r.strike-a.atm)<=state.range*step+1).sort((x,y)=>y.strike-x.strike);
+  const W=1000, rowH=22, padT=30, padB=26, mid=500, half=380, labW=70;
+  const H=padT+rows.length*rowH+padB;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  const val=(r,side)=>mode==="oi"?(side==="ce"?r.ceOi:r.peOi):(side==="ce"?r.ceChg:r.peChg);
+  const max=Math.max(1,...rows.map(r=>Math.max(Math.abs(val(r,"ce")||0),Math.abs(val(r,"pe")||0))));
+  const sx=v=>Math.abs(v)/max*half;
+  let out=[];
+  // gridlines (recessive) at quarter marks
+  for(let i=1;i<=4;i++){ const g=half*i/4; out.push(`<line x1="${mid-labW/2-g}" x2="${mid-labW/2-g}" y1="${padT}" y2="${H-padB}" stroke="var(--grid)" stroke-width="1"/><line x1="${mid+labW/2+g}" x2="${mid+labW/2+g}" y1="${padT}" y2="${H-padB}" stroke="var(--grid)" stroke-width="1"/>`);
+    const t=fmtU(max*i/4,1); out.push(`<text x="${mid-labW/2-g}" y="${H-padB+16}" text-anchor="middle" font-size="11" fill="var(--ink3)" font-family="IBM Plex Mono,monospace">${t}</text><text x="${mid+labW/2+g}" y="${H-padB+16}" text-anchor="middle" font-size="11" fill="var(--ink3)" font-family="IBM Plex Mono,monospace">${t}</text>`); }
+  out.push(`<text x="${mid-labW/2-half}" y="${padT-12}" font-size="11" fill="var(--ce)" font-weight="600" font-family="IBM Plex Sans,sans-serif">CE ${mode==="oi"?"OI":"OI change"} ←</text>`);
+  out.push(`<text x="${mid+labW/2+half}" y="${padT-12}" text-anchor="end" font-size="11" fill="var(--pe)" font-weight="600" font-family="IBM Plex Sans,sans-serif">→ PE ${mode==="oi"?"OI":"OI change"}</text>`);
+  out.push(`<text x="${mid}" y="${padT-12}" text-anchor="middle" font-size="11" fill="var(--ink3)" font-family="IBM Plex Sans,sans-serif">STRIKE</text>`);
+  const bh=rowH-6;
+  rows.forEach((r,i)=>{
+    const y=padT+i*rowH, cy=y+rowH/2;
+    const isAtm=r.strike===a.atm;
+    if(isAtm) out.push(`<rect x="0" y="${y}" width="${W}" height="${rowH}" fill="var(--atm)"/>`);
+    const ce=val(r,"ce")||0, pe=val(r,"pe")||0;
+    const ceW=sx(ce), peW=sx(pe);
+    const ceNeg=mode==="chg"&&ce<0, peNeg=mode==="chg"&&pe<0;
+    out.push(`<g class="bar" data-i="${i}"><rect x="${mid-labW/2-ceW}" y="${y+3}" width="${ceW}" height="${bh}" rx="2" ${ceNeg?'fill="none" stroke="var(--ce)" stroke-width="1.5"':'fill="var(--ce)"'}/>`);
+    out.push(`<rect x="${mid+labW/2}" y="${y+3}" width="${peW}" height="${bh}" rx="2" ${peNeg?'fill="none" stroke="var(--pe)" stroke-width="1.5"':'fill="var(--pe)"'}/>`);
+    out.push(`<text x="${mid}" y="${cy+4}" text-anchor="middle" font-size="12" font-weight="${isAtm?"700":"500"}" fill="var(--ink)" font-family="IBM Plex Mono,monospace">${r.strike}</text>`);
+    // direct labels on the two largest per side
+    out.push(`<rect x="0" y="${y}" width="${W}" height="${rowH}" fill="transparent"/></g>`);
+    const marks=[]; if(a.sup&&r.strike===a.sup.strike) marks.push(["S","var(--pe)",mid+labW/2+peW+6,"start"]); if(a.res&&r.strike===a.res.strike) marks.push(["R","var(--ce)",mid-labW/2-ceW-6,"end"]); if(a.mp===r.strike) marks.push(["MP","var(--be)",mid+labW/2+peW+(a.sup&&r.strike===a.sup.strike?26:6),"start"]);
+    for(const m of marks) out.push(`<text x="${m[2]}" y="${cy+4}" text-anchor="${m[3]}" font-size="10" font-weight="700" fill="${m[1]}" font-family="IBM Plex Sans,sans-serif">${m[0]}</text>`);
+  });
+  // spot line label
+  out.push(`<line x1="${mid-labW/2}" x2="${mid-labW/2}" y1="${padT}" y2="${H-padB}" stroke="var(--line)" stroke-width="1"/><line x1="${mid+labW/2}" x2="${mid+labW/2}" y1="${padT}" y2="${H-padB}" stroke="var(--line)" stroke-width="1"/>`);
+  svg.innerHTML=`<title id="chartTitle">Strike-wise CE and PE ${mode==="oi"?"open interest":"OI change"}</title>`+out.join("");
+  $("legOut").hidden=mode!=="chg";
+  // tooltip
+  const tip=$("tip"), wrap=svg.parentElement;
+  svg.querySelectorAll("g.bar").forEach(g=>{
+    const r=rows[+g.dataset.i];
+    const show=e=>{ tip.style.display="block";
+      tip.innerHTML=`<b>${r.strike}${r.strike===a.atm?" · ATM":""}</b><span style="color:var(--ce)">CE</span> OI ${fmtU(r.ceOi)} <span class="${cls(r.ceChg)}">${fmtUS(r.ceChg)}</span><br><span style="color:var(--pe)">PE</span> OI ${fmtU(r.peOi)} <span class="${cls(r.peChg)}">${fmtUS(r.peChg)}</span><br><span style="color:var(--ink3)">PCR ${r.ceOi?(r.peOi/r.ceOi).toFixed(2):"—"}</span>`;
+      const b=wrap.getBoundingClientRect(); let x=e.clientX-b.left+14, y=e.clientY-b.top+14; if(x+tip.offsetWidth>b.width-8) x=e.clientX-b.left-tip.offsetWidth-14; tip.style.left=x+"px"; tip.style.top=y+"px"; };
+    g.addEventListener("mousemove",show); g.addEventListener("mouseleave",()=>tip.style.display="none");
+  });
+  // table
+  const t=$("tbl");
+  t.innerHTML=`<thead><tr><th class="cebg">CE OI chg</th><th class="cebg">CE OI</th><th class="strike">Strike</th><th class="pebg">PE OI</th><th class="pebg">PE OI chg</th><th>PCR</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr class="${r.strike===a.atm?"atm":""}"><td class="num ${cls(r.ceChg)}">${fmtUS(r.ceChg)}</td><td class="num">${fmtU(r.ceOi)}${a.res&&r.strike===a.res.strike?'<span class="mk" style="color:var(--ce)">R</span>':""}</td><td class="strike num">${r.strike}${r.strike===a.atm?'<span class="mk">ATM</span>':""}</td><td class="num">${fmtU(r.peOi)}${a.sup&&r.strike===a.sup.strike?'<span class="mk" style="color:var(--pe)">S</span>':""}${a.mp===r.strike?'<span class="mk" style="color:var(--be)">MP</span>':""}</td><td class="num ${cls(r.peChg)}">${fmtUS(r.peChg)}</td><td class="num">${r.ceOi?(r.peOi/r.ceOi).toFixed(2):"—"}</td></tr>`).join("")+"</tbody>";
+}
+
+function render(){
+  const d=cur();
+  if(!d){ // no data for this symbol
+    const s=state.symbol; state.datasets[s]=Object.assign(makeSample(),{symbol:s,lot:LOTS[s],sample:true,note:"no-data"}); }
+  const dd=cur(); const a=analyse(dd);
+  renderTop(dd,a); renderOiBox(dd,a); renderVerdict(dd,a); renderChart(dd,a);
+  if(dd.note==="no-data") $("srcTag").textContent="Sample (NIFTY-style) — "+dd.symbol+" ka data paste karo";
+}
+
+/* ---------- parsing ---------- */
+function parseCSV(txt){
+  const lines=txt.trim().split(/\r?\n/).filter(l=>l.trim()); if(lines.length<2) throw new Error("CSV me header + kam se kam 1 row chahiye");
+  const hdr=lines[0].split(",").map(h=>h.trim().replace(/[^a-z]/gi,"").toLowerCase());
+  const idx=n=>hdr.findIndex(h=>h===n);
+  const map={strike:idx("strike"),ceOi:hdr.findIndex(h=>/^ceoi$|^calloi$/.test(h)),ceChg:hdr.findIndex(h=>/^cechg$|^ceoichg$|^cechange$|^calloichg$/.test(h)),peOi:hdr.findIndex(h=>/^peoi$|^putoi$/.test(h)),peChg:hdr.findIndex(h=>/^pechg$|^peoichg$|^pechange$|^putoichg$/.test(h))};
+  if(map.strike<0||map.ceOi<0||map.peOi<0) throw new Error("Header me strike, ceOi, peOi chahiye (ceChg, peChg optional)");
+  const num=s=>{ if(s==null) return 0; const v=parseFloat(String(s).replace(/[",\s]/g,"")); return isNaN(v)?0:v; };
+  return lines.slice(1).map(l=>{ const c=l.split(","); return {strike:num(c[map.strike]),ceOi:num(c[map.ceOi]),ceChg:map.ceChg>=0?num(c[map.ceChg]):0,peOi:num(c[map.peOi]),peChg:map.peChg>=0?num(c[map.peChg]):0}; }).filter(r=>r.strike>0);
+}
+function fromNSE(j){ // NSE option-chain JSON
+  const recs=j.records&&Array.isArray(j.records.data)?j.records.data:(j.filtered&&j.filtered.data);
+  if(!recs) return null;
+  const exp=(j.records&&j.records.expiryDates&&j.records.expiryDates[0])||null;
+  const rows=recs.filter(r=>!exp||r.expiryDate===exp).map(r=>({strike:r.strikePrice,ceOi:r.CE?r.CE.openInterest:0,ceChg:r.CE?r.CE.changeinOpenInterest:0,peOi:r.PE?r.PE.openInterest:0,peChg:r.PE?r.PE.changeinOpenInterest:0}));
+  const spot=j.records&&j.records.underlyingValue;
+  return {chain:rows,spot,expiry:exp,asof:j.records&&j.records.timestamp};
+}
+function loadPasted(txt){
+  txt=txt.trim(); if(!txt) throw new Error("Kuch paste nahi hua");
+  const prev=cur()||{}; let d;
+  if(txt[0]==="{"||txt[0]==="["){
+    let j; try{ j=JSON.parse(txt);}catch(e){ throw new Error("JSON galat hai: "+e.message); }
+    if(Array.isArray(j)) d={chain:j};
+    else { const n=fromNSE(j); d=n||j; }
+  } else d={chain:parseCSV(txt)};
+  if(!Array.isArray(d.chain)||!d.chain.length) throw new Error("chain[] khaali hai");
+  d.chain=d.chain.map(r=>({strike:+r.strike,ceOi:+(r.ceOi||0),ceChg:+(r.ceChg||0),peOi:+(r.peOi||0),peChg:+(r.peChg||0)})).filter(r=>r.strike>0);
+  const sym=(d.symbol||prev.symbol||state.symbol).toUpperCase();
+  const merged={symbol:sym,lot:d.lot||prev.lot||LOTS[sym]||1,spot:d.spot!=null?+d.spot:prev.spot,expiry:d.expiry||prev.expiry,asof:d.asof||prev.asof||new Date().toLocaleString("en-IN"),
+    fut:d.fut||prev.fut,chain:d.chain,sample:false};
+  if(merged.spot==null){ // estimate spot from max-pain neighbourhood if missing
+    merged.spot=maxPain(merged.chain); }
+  if(!merged.fut) merged.fut={};
+  if(LOTS[sym]) state.symbol=sym;
+  state.datasets[sym]=merged;
+  $("sym").value=state.symbol;
+}
+
+/* ---------- persistence ---------- */
+function snapshot(){ const out={symbol:state.symbol,unit:state.unit,mode:state.mode,range:state.range,datasets:{}}; for(const k in state.datasets){ if(!state.datasets[k].sample&&!state.datasets[k].auto) out.datasets[k]=state.datasets[k]; } return out; }
+function applySaved(s){ if(!s) return; if(s.datasets) for(const k in s.datasets) state.datasets[k]=s.datasets[k]; if(s.symbol&&state.datasets[s.symbol]) state.symbol=s.symbol; if(s.unit) state.unit=s.unit; if(s.mode) state.mode=s.mode; if(s.range) state.range=s.range; }
+function save(){
+  const s=snapshot(); ls("oidesk.state",JSON.stringify(s));
+  $("saveState").textContent="saved in this browser";
+}
+function syncControls(){
+  $("sym").value=state.symbol; $("range").value=state.range; $("rangeV").textContent=state.range;
+  $("unit").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.u===state.unit)));
+  $("mode").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.m===state.mode)));
+}
+
+/* ---------- theme ---------- */
+function applyTheme(t){ const r=document.documentElement; if(t) r.setAttribute("data-theme",t); else r.removeAttribute("data-theme"); ls("oidesk.theme",t||""); $("themeBtn").textContent=t==="dark"?"● Dark":t==="light"?"○ Light":"◐ Auto"; }
+$("themeBtn").addEventListener("click",()=>{ const c=document.documentElement.getAttribute("data-theme"); applyTheme(c==="dark"?"light":c==="light"?"":"dark"); });
+
+/* ---------- events ---------- */
+$("sym").addEventListener("change",e=>{ state.symbol=e.target.value; render(); save(); });
+$("lot").addEventListener("change",e=>{ const d=cur(); if(d){ d.lot=Math.max(1,+e.target.value||1); render(); save(); } });
+$("unit").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; state.unit=b.dataset.u; syncControls(); render(); save(); });
+$("mode").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; state.mode=b.dataset.m; syncControls(); render(); save(); });
+$("range").addEventListener("input",e=>{ state.range=+e.target.value; $("rangeV").textContent=state.range; render(); });
+$("range").addEventListener("change",save);
+$("pasteBtn").addEventListener("click",()=>{ $("pasteBox").open=true; $("pasteTa").focus(); $("pasteBox").scrollIntoView({behavior:"smooth",block:"start"}); });
+$("loadBtn").addEventListener("click",()=>{ const m=$("pasteMsg"); try{ loadPasted($("pasteTa").value); syncControls(); render(); save(); m.className="msg ok"; m.textContent=`Loaded: ${cur().symbol}, ${cur().chain.length} strikes${cur().fut&&cur().fut.oi!=null?" + FUT OI":" (FUT box: pehle wala data)"}`; }catch(err){ m.className="msg err"; m.textContent=err.message; } });
+$("sampleBtn").addEventListener("click",()=>{ state.datasets={NIFTY:makeSample()}; state.symbol="NIFTY"; syncControls(); render(); save(); $("pasteMsg").className="msg ok"; $("pasteMsg").textContent="Sample data wapas."; });
+$("copyBtn").addEventListener("click",async()=>{ const d=Object.assign({},cur()); delete d.sample; delete d.note; const txt=JSON.stringify(d,null,1); try{ await navigator.clipboard.writeText(txt); $("pasteMsg").className="msg ok"; $("pasteMsg").textContent="JSON clipboard me copy ho gaya."; }catch(e){ $("pasteTa").value=txt; $("pasteMsg").className="msg ok"; $("pasteMsg").textContent="JSON textarea me daal diya (clipboard block tha)."; } });
+
+/* ---------- boot ---------- */
+applyTheme(ls("oidesk.theme")||"");
+let AUTO=null;
+try{ const el=$("oidata"); const t=el&&el.textContent.trim(); if(t){ const j=JSON.parse(t); if(j&&j.datasets) AUTO=j; else if(j&&j.chain) AUTO={datasets:{[(j.symbol||"NIFTY").toUpperCase()]:j}}; } }catch(e){ AUTO=null; }
+try{ const sv=JSON.parse(ls("oidesk.state")||"null"); if(sv){ if(AUTO) delete sv.datasets; applySaved(sv);} }catch(e){}
+if(AUTO){ for(const k in AUTO.datasets){ const d=AUTO.datasets[k]; d.symbol=k; d.sample=false; d.auto=true; state.datasets[k]=d; } if(!state.datasets[state.symbol]||state.datasets[state.symbol].sample){ state.symbol=Object.keys(AUTO.datasets)[0]; } }
+syncControls(); render();
+})();
+</script>
