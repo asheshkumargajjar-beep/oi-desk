@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALGO SIGNAL</title>
+<style>
+:root{--bg:#f5f7fb;--card:#ffffff;--ink:#1b2430;--mut:#6b7280;--line:#e3e8f0;--acc:#243b6b;
+ --good:#1e7b4f;--goodbg:#ddf3e6;--bad:#b42318;--badbg:#fde2e2;--warn:#a15c00;--warnbg:#fff1d6;--cool:#3b5a8a;--coolbg:#e7eef9;--mono:Consolas,"SF Mono",Menlo,monospace}
+:root[data-theme="dark"]{--bg:#0d1526;--card:#16213a;--ink:#e6ebf5;--mut:#93a0b8;--line:#263351;--acc:#9db4e8;
+ --good:#4cd38a;--goodbg:#143d2a;--bad:#ff7b7b;--badbg:#4a1d1d;--warn:#ffc266;--warnbg:#4a3410;--cool:#9db4e8;--coolbg:#1d2b4a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 "Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:16px}
+header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}
+h1{font-size:20px;margin:0;letter-spacing:.3px}h1 small{font-weight:400;color:var(--mut);font-size:13px;margin-left:8px}
+.tag{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:700}
+.t-live{background:var(--goodbg);color:var(--good)}.t-stale{background:var(--warnbg);color:var(--warn)}.t-off{background:var(--coolbg);color:var(--cool)}.t-paper{background:var(--coolbg);color:var(--cool)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--good);margin-right:6px;animation:p 1.4s infinite}@keyframes p{50%{opacity:.3}}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.c4{grid-column:span 4}.c6{grid-column:span 6}.c8{grid-column:span 8}.c12{grid-column:span 12}
+@media(max-width:860px){.c4,.c6,.c8{grid-column:span 12}}
+.card h2{font-size:12px;letter-spacing:.8px;text-transform:uppercase;color:var(--mut);margin:0 0 10px}
+.dec{font-size:34px;font-weight:800;letter-spacing:1px;padding:8px 18px;border-radius:10px;display:inline-block}
+.CALL{background:var(--goodbg);color:var(--good)}.PUT{background:var(--badbg);color:var(--bad)}.BOTH{background:var(--warnbg);color:var(--warn)}.NO_TRADE{background:var(--coolbg);color:var(--cool)}
+.BULLISH{color:var(--good)}.BEARISH{color:var(--bad)}.NEUTRAL{color:var(--mut)}
+.why{color:var(--mut);margin-top:8px;font-size:13px}
+.gauge{height:14px;border-radius:7px;background:linear-gradient(90deg,var(--bad),var(--mut) 50%,var(--good));position:relative;margin:10px 0 4px}
+.gauge i{position:absolute;top:-5px;width:4px;height:24px;background:var(--ink);border-radius:2px;margin-left:-2px}
+.kv{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:13px}.kv b{font-weight:600}.kv span:first-child{color:var(--mut)}
+.pill{display:inline-block;padding:1px 8px;border-radius:9px;font-size:11px;font-weight:700}
+.p-good{background:var(--goodbg);color:var(--good)}.p-bad{background:var(--badbg);color:var(--bad)}.p-warn{background:var(--warnbg);color:var(--warn)}.p-cool{background:var(--coolbg);color:var(--cool)}
+.nudge{display:flex;gap:6px;flex-wrap:wrap}.nudge div{padding:4px 8px;border-radius:8px;font-size:12px;border:1px solid var(--line)}
+.nudge .up{border-color:var(--good);color:var(--good)}.nudge .dn{border-color:var(--bad);color:var(--bad)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}th{text-align:left;color:var(--mut);font-weight:600;border-bottom:1px solid var(--line);padding:5px 6px;white-space:nowrap}
+td{padding:5px 6px;border-bottom:1px solid var(--line);white-space:nowrap}.num{text-align:right;font-family:var(--mono)}
+.pnl{font-size:30px;font-weight:800;font-family:var(--mono)}.pos{color:var(--good)}.neg{color:var(--bad)}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc)}
+.foot{color:var(--mut);font-size:11.5px;margin-top:14px;line-height:1.5}
+button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:12px}
+.sub{font-size:11.5px;color:var(--mut)}.big{font-size:22px;font-weight:700;font-family:var(--mono)}
+.blk{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}@media(max-width:860px){.blk{grid-template-columns:repeat(2,1fr)}}
+.blk .b{border:1px solid var(--line);border-radius:8px;padding:8px}.blk .b h4{margin:0 0 4px;font-size:12px}.blk .b.now{border-color:var(--acc);box-shadow:0 0 0 2px var(--coolbg)}
+.blk .b.done{opacity:.8}.mini{font-size:11.5px;color:var(--mut)}
+</style>
+</head>
+<body>
+<!--ALGODATA--><script id="algodata" type="application/json">{"meta":{"index":"NIFTY","date":"2026-10-18","mode":"PAPER","status":"SIGNAL","built":"2026-10-18 22:05:57","server_time":"22:05:57"},"signal":{"date":"2026-10-18","time":"22:05:49","index":"NIFTY","expiry":"2026-10-19","spot":23146.15,"atm":23150.0,"strike_step":50.0,"lot":65,"expiry_day":false,"today_open":23065.1,"prev_close":23146.15,"avg_range":326.8,"hist_oc_range":167.8,"cpr_ratio":0.323,"orb_high":null,"orb_low":null,"futures":"NIFTY-Oct2026-FUT","vwap":23078.86,"fut_ltp":23113.0,"vix":14.06,"vix_move":204.3,"expected_move":186.0,"pcr":0.77,"pcr_bias":"BEARISH","weighted_pcr":0.75,"weighted_pcr_bias":"BEARISH","vwap_bias":"BULLISH","orb_bias":"NEUTRAL","gap":-81.1,"big_gap":false,"gap_bias":"BEARISH","points_from_open":81.1,"momentum_bias":"BULLISH","momentum_frac":0.44,"atm_oi_bias":"NEUTRAL","atm_ce_oi_ratio":1.5,"atm_pe_oi_ratio":1.5,"resistance":23200.0,"resistance_oi":9734465.0,"resistance_dist":53.849999999998545,"resistance_oi_ratio":1.43,"support":23000.0,"support_oi":11539320.0,"support_dist":146.15000000000146,"support_oi_ratio":1.5,"base_up":0.397,"up_prob":0.447,"down_prob":0.553,"nudges":{"weighted_pcr":-0.05,"vwap":0.05,"orb":0.0,"gap":0.0,"momentum":0.05,"atm_oi_change":0.0,"ai":0.0},"technical_bias":"NEUTRAL","vol_conf":52,"vol_parts":{"range":28.5,"orb":0.0,"momentum":8.7,"oi_buildup":13.9,"cpr":0.5},"atm_ce_premium":62.8,"atm_pe_premium":120.65,"req_call":72.2,"req_put":138.7,"req_both":211.0,"range_too_tight":false,"decision":"PUT","why":"upside 45% <= 45%","ai_sentiment":"NEUTRAL"},"paper":{"status":"SIGNAL","sl_enabled":true,"max_loss":1500.0,"target_enabled":true,"target_profit":2000.0,"force_exit_time":"15:15","updated":"22:05:57","legs":[]},"naksha":{"key":"GAP_DOWN|NON_EXPIRY|VIX_MID","n":104,"gap_type":"GAP_DOWN","blocks":{"B1":{"label":"09:15-10:30","n":104,"avg_range":136.4,"avg_move":67.2,"bias":3.1,"p_up":55,"p_high":39,"p_low":40,"continuation":45,"trend_ratio":0.46,"range_share":68},"B2":{"label":"10:30-12:00","n":104,"avg_range":84.0,"avg_move":41.0,"bias":3.6,"p_up":48,"p_high":13,"p_low":11,"continuation":43,"trend_ratio":0.44,"range_share":41},"B3":{"label":"12:00-13:30","n":104,"avg_range":83.6,"avg_move":43.6,"bias":-7.2,"p_up":45,"p_high":9,"p_low":9,"continuation":50,"trend_ratio":0.47,"range_share":41},"B4":{"label":"13:30-15:30","n":104,"avg_range":101.2,"avg_move":50.6,"bias":3.3,"p_up":54,"p_high":38,"p_low":40,"continuation":55,"trend_ratio":0.45,"range_share":51}},"day":{"n":104,"avg_range":214.9,"avg_oc":103.4,"p_up":53,"gap_fill":49},"today":{},"now_block":null,"built":"2026-10-18 22:01","days":1367},"history":[{"date":"2026-10-18","time":"22:05:49","index":"NIFTY","decision":"PUT","why":"upside 45% <= 45%","spot":23146.15,"today_open":23065.1,"prev_close":23146.15,"gap":-81.1,"big_gap":false,"expiry":"2026-10-19","expiry_day":false,"atm":23150.0,"atm_ce_premium":62.8,"atm_pe_premium":120.65,"up_prob":0.447,"down_prob":0.553,"base_up":0.397,"technical_bias":"NEUTRAL","vol_conf":52,"pcr":0.77,"pcr_bias":"BEARISH","weighted_pcr":0.75,"weighted_pcr_bias":"BEARISH","vwap":23078.86,"vwap_bias":"BULLISH","orb_high":null,"orb_low":null,"orb_bias":"NEUTRAL","vix":14.06,"vix_move":204.3,"hist_oc_range":167.8,"expected_move":186.0,"points_from_open":81.1,"momentum_frac":0.44,"momentum_bias":"BULLISH","atm_oi_bias":"NEUTRAL","resistance":23200.0,"resistance_oi":9734465.0,"resistance_oi_ratio":1.43,"support":23000.0,"support_oi":11539320.0,"support_oi_ratio":1.5,"req_call":72.2,"req_put":138.7,"req_both":211.0,"cpr_ratio":0.323,"ai_sentiment":"NEUTRAL"},{"date":"2026-10-18","time":"21:39:02","index":"NIFTY","decision":"PUT","why":"upside 45% <= 45%","spot":23146.15,"today_open":23065.1,"prev_close":23146.15,"gap":-81.1,"big_gap":false,"expiry":"2026-10-19","expiry_day":false,"atm":23150.0,"atm_ce_premium":62.8,"atm_pe_premium":120.65,"up_prob":0.447,"down_prob":0.553,"base_up":0.397,"technical_bias":"NEUTRAL","vol_conf":52,"pcr":0.77,"pcr_bias":"BEARISH","weighted_pcr":0.75,"weighted_pcr_bias":"BEARISH","vwap":23078.86,"vwap_bias":"BULLISH","orb_high":null,"orb_low":null,"orb_bias":"NEUTRAL","vix":14.06,"vix_move":204.3,"hist_oc_range":167.8,"expected_move":186.0,"points_from_open":81.1,"momentum_frac":0.44,"momentum_bias":"BULLISH","atm_oi_bias":"NEUTRAL","resistance":23200.0,"resistance_oi":9734465.0,"resistance_oi_ratio":1.43,"support":23000.0,"support_oi":11539320.0,"support_oi_ratio":1.5,"req_call":72.2,"req_put":138.7,"req_both":211.0,"cpr_ratio":0.323,"ai_sentiment":"NEUTRAL"},{"date":"2026-10-18","time":"21:38:51","index":"NIFTY","decision":"PUT","why":"upside 45% <= 45%","spot":23146.15,"today_open":23065.1,"prev_close":23146.15,"gap":-81.1,"big_gap":false,"expiry":"2026-10-19","expiry_day":false,"atm":23150.0,"atm_ce_premium":62.8,"atm_pe_premium":120.65,"up_prob":0.447,"down_prob":0.553,"base_up":0.397,"technical_bias":"NEUTRAL","vol_conf":52,"pcr":0.77,"pcr_bias":"BEARISH","weighted_pcr":0.75,"weighted_pcr_bias":"BEARISH","vwap":23078.86,"vwap_bias":"BULLISH","orb_high":null,"orb_low":null,"orb_bias":"NEUTRAL","vix":14.06,"vix_move":204.3,"hist_oc_range":167.8,"expected_move":186.0,"points_from_open":81.1,"momentum_frac":0.44,"momentum_bias":"BULLISH","atm_oi_bias":"NEUTRAL","resistance":23200.0,"resistance_oi":9734465.0,"resistance_oi_ratio":1.43,"support":23000.0,"support_oi":11539320.0,"support_oi_ratio":1.5,"req_call":72.2,"req_put":138.7,"req_both":211.0,"cpr_ratio":0.323,"ai_sentiment":"NEUTRAL"},{"date":"2026-10-18","time":"21:38:14","index":"NIFTY","decision":"PUT","why":"upside 45% <= 45%","spot":23146.15,"today_open":23065.1,"prev_close":23146.15,"gap":-81.1,"big_gap":false,"expiry":"2026-10-19","expiry_day":false,"atm":23150.0,"atm_ce_premium":62.8,"atm_pe_premium":120.65,"up_prob":0.447,"down_prob":0.553,"base_up":0.397,"technical_bias":"NEUTRAL","vol_conf":52,"pcr":0.77,"pcr_bias":"BEARISH","weighted_pcr":0.75,"weighted_pcr_bias":"BEARISH","vwap":23078.86,"vwap_bias":"BULLISH","orb_high":null,"orb_low":null,"orb_bias":"NEUTRAL","vix":14.06,"vix_move":204.3,"hist_oc_range":167.8,"expected_move":186.0,"points_from_open":81.1,"momentum_frac":0.44,"momentum_bias":"BULLISH","atm_oi_bias":"NEUTRAL","resistance":23200.0,"resistance_oi":9734465.0,"resistance_oi_ratio":1.43,"support":23000.0,"support_oi":11539320.0,"support_oi_ratio":1.5,"req_call":72.2,"req_put":138.7,"req_both":211.0,"cpr_ratio":0.323,"ai_sentiment":"NEUTRAL"},{"date":"2026-10-18","time":"21:37:37","index":"NIFTY","decision":"PUT","why":"upside 45% <= 45%","spot":23146.15,"today_open":23065.1,"prev_close":23146.15,"gap":-81.1,"big_gap":false,"expiry":"2026-10-19","expiry_day":false,"atm":23150.0,"atm_ce_premium":62.8,"atm_pe_premium":120.65,"up_prob":0.447,"down_prob":0.553,"base_up":0.397,"technical_bias":"NEUTRAL","vol_conf":52,"pcr":0.77,"pcr_bias":"BEARISH","weighted_pcr":0.75,"weighted_pcr_bias":"BEARISH","vwap":23078.86,"vwap_bias":"BULLISH","orb_high":null,"orb_low":null,"orb_bias":"NEUTRAL","vix":14.06,"vix_move":204.3,"hist_oc_range":167.8,"expected_move":186.0,"points_from_open":81.1,"momentum_frac":0.44,"momentum_bias":"BULLISH","atm_oi_bias":"NEUTRAL","resistance":23200.0,"resistance_oi":9734465.0,"resistance_oi_ratio":1.43,"support":23000.0,"support_oi":11539320.0,"support_oi_ratio":1.5,"req_call":72.2,"req_put":138.7,"req_both":211.0,"cpr_ratio":0.323,"ai_sentiment":"NEUTRAL"}],"trades":[{"date":"2026-10-18","decision":"PUT","leg":"PE","symbol":"NIFTY 23150 PE 2026-10-19","qty":65,"entry_time":"21:39:14","entry":120.65,"exit_time":"21:39:19","exit":120.65,"pnl":0.0,"reason":"FORCE 15:15","mfe":0.0,"mae":0.0,"up_prob":0.447,"vol_conf":52}],"scorecard":{"din":1,"jeet":0,"haar":1,"win%":0,"avg jeet":0,"avg haar":0,"kul P&L":0,"profit factor":null,"best din":0,"worst din":0}}</script><!--/ALGODATA-->
+<!--ALGOCFG--><script id="algocfg" type="application/json">{"firebase": "https://oi-desk-7683a-default-rtdb.asia-southeast1.firebasedatabase.app"}</script><!--/ALGOCFG-->
+<div class="wrap">
+<header>
+  <h1>ALGO SIGNAL <small id="hIndex">NIFTY</small></h1>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <span class="tag t-paper">PAPER MODE</span>
+    <span class="tag t-off" id="live">OFFLINE</span>
+    <span class="sub" id="asof">—</span>
+    <button id="theme">Dark / Light</button>
+  </div>
+</header>
+
+<div class="grid">
+  <div class="card c4">
+    <h2>Decision</h2>
+    <div><span class="dec NO_TRADE" id="dec">—</span></div>
+    <div class="why" id="why">—</div>
+    <div class="kv" style="margin-top:10px">
+      <span>Index / expiry</span><b id="kExp">—</b>
+      <span>Spot / open / prev close</span><b id="kSpot">—</b>
+      <span>Gap</span><b id="kGap">—</b>
+      <span>ATM strike</span><b id="kAtm">—</b>
+      <span>ATM CE / PE premium</span><b id="kPrem">—</b>
+      <span>Analysed at</span><b id="kTime">—</b>
+    </div>
+  </div>
+
+  <div class="card c4">
+    <h2>Probability of move</h2>
+    <div style="display:flex;justify-content:space-between"><span class="big neg" id="pDown">—</span><span class="big pos" id="pUp">—</span></div>
+    <div class="gauge"><i id="gIdx" style="left:50%"></i></div>
+    <div class="sub" style="display:flex;justify-content:space-between"><span>DOWN</span><span>base from OI walls: <b id="pBase">—</b></span><span>UP</span></div>
+    <h2 style="margin-top:12px">Nudges (±5 pp each)</h2>
+    <div class="nudge" id="nudges"></div>
+    <div class="kv" style="margin-top:10px">
+      <span>Technical bias (2 of 3)</span><b id="kTech">—</b>
+      <span>Volatility confidence</span><b id="kVol">—</b>
+    </div>
+    <div class="bar" style="margin-top:4px"><i id="volBar" style="width:0"></i></div>
+    <div class="mini" id="volParts"></div>
+  </div>
+
+  <div class="card c4">
+    <h2>Paper trade</h2>
+    <div id="paperNone" class="sub">No paper position today.</div>
+    <div id="paperBox" style="display:none">
+      <div class="pnl" id="pnl">—</div>
+      <div class="sub" id="pnlSub">—</div>
+      <table style="margin-top:8px"><thead><tr><th>Leg</th><th class="num">Qty</th><th class="num">Entry</th><th class="num">LTP</th><th class="num">P&L</th><th>Status</th></tr></thead><tbody id="legs"></tbody></table>
+      <div class="kv" style="margin-top:8px">
+        <span>Stop loss / target</span><b id="kSl">—</b>
+        <span>Force exit</span><b id="kForce">—</b>
+        <span>Best / worst (MFE / MAE)</span><b id="kMfe">—</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="card c6">
+    <h2>Signals</h2>
+    <table><tbody id="sigRows"></tbody></table>
+  </div>
+
+  <div class="card c6">
+    <h2>Option-chain walls &amp; breakeven</h2>
+    <table><tbody id="wallRows"></tbody></table>
+  </div>
+
+  <div class="card c12">
+    <h2>Day map — how NIFTY has behaved in each time block on days like today <span class="sub" id="nkKey"></span></h2>
+    <div class="blk" id="blocks"></div>
+    <div class="mini" style="margin-top:8px" id="nkDay"></div>
+    <div class="mini">Expected = historical average for the matched context (NIFTY 5-min data since Apr-2021). Actual = today so far. Information only — it does not change the decision.</div>
+  </div>
+
+  <div class="card c6">
+    <h2>Scorecard (paper, by day)</h2>
+    <div class="kv" id="score"></div>
+  </div>
+
+  <div class="card c6">
+    <h2>Recent paper trades</h2>
+    <table><thead><tr><th>Date</th><th>Dir</th><th>Leg</th><th class="num">Entry</th><th class="num">Exit</th><th class="num">P&L</th><th>Reason</th></tr></thead><tbody id="tradeRows"></tbody></table>
+  </div>
+
+  <div class="card c12">
+    <h2>Signal history</h2>
+    <div style="overflow:auto"><table><thead><tr><th>Date</th><th>Time</th><th>Decision</th><th class="num">UP%</th><th class="num">Spot</th><th class="num">Gap</th><th>PCR</th><th>wPCR</th><th>VWAP</th><th>ORB</th><th class="num">VIX</th><th class="num">Exp move</th><th class="num">Vol conf</th><th>Why</th></tr></thead><tbody id="histRows"></tbody></table></div>
+  </div>
+</div>
+<div class="foot">Paper mode: no orders are sent to the broker. Probability = OI-wall base ± nudges (weighted PCR, VWAP, ORB, gap, momentum, ATM OI change, AI). Decision requires expected move ≥ breakeven × margin. Educational / research use; not financial advice.</div>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const f0=v=>(v==null||isNaN(v))?"—":Math.round(v).toLocaleString("en-IN");
+const f1=v=>(v==null||isNaN(v))?"—":(+v).toFixed(1);
+const f2=v=>(v==null||isNaN(v))?"—":(+v).toFixed(2);
+const pct=v=>(v==null||isNaN(v))?"—":Math.round(v*100)+"%";
+const sgn=v=>(v==null||isNaN(v))?"—":((v>0?"+":"")+Math.round(v));
+const cls=b=>b==="BULLISH"?"p-good":b==="BEARISH"?"p-bad":"p-cool";
+const pill=(t,c)=>`<span class="pill ${c||cls(t)}">${t==null?"—":t}</span>`;
+let D=null;
+try{D=JSON.parse($("algodata").textContent||"null")}catch(e){}
+let CFG=null;try{CFG=JSON.parse($("algocfg").textContent||"null")}catch(e){}
+
+function render(d){
+  if(!d) return; const s=d.signal||{}, m=d.meta||{}, p=d.paper||{}, nk=d.naksha||{};
+  $("hIndex").textContent=s.index||m.index||"NIFTY";
+  $("asof").textContent=(m.date||"")+" "+(m.server_time||s.time||"");
+  $("dec").textContent=(s.decision||"—").replace("_"," "); $("dec").className="dec "+(s.decision||"NO_TRADE");
+  $("why").textContent=s.why||"";
+  $("kExp").textContent=`${s.index||""} / ${s.expiry||"—"}${s.expiry_day?"  (EXPIRY DAY)":""}`;
+  $("kSpot").textContent=`${f2(s.spot)} / ${f2(s.today_open)} / ${f2(s.prev_close)}`;
+  $("kGap").innerHTML=`${sgn(s.gap)} pts ${s.big_gap?pill("LARGE","p-warn"):""}`;
+  $("kAtm").textContent=f0(s.atm)+(s.lot?`  (lot ${s.lot})`:"");
+  $("kPrem").textContent=`${f2(s.atm_ce_premium)} / ${f2(s.atm_pe_premium)}`;
+  $("kTime").textContent=s.time||"—";
+  const up=s.up_prob; $("pUp").textContent=pct(up); $("pDown").textContent=pct(up==null?null:1-up);
+  $("gIdx").style.left=(up==null?50:up*100)+"%"; $("pBase").textContent=pct(s.base_up);
+  const N={weighted_pcr:"Weighted PCR",vwap:"VWAP",orb:"ORB",gap:"Gap",momentum:"Momentum",atm_oi_change:"ATM OI change",ai:"AI sentiment"};
+  $("nudges").innerHTML=Object.entries(s.nudges||{}).map(([k,v])=>`<div class="${v>0?"up":v<0?"dn":""}">${N[k]||k} ${v>0?"+5":v<0?"−5":"0"}</div>`).join("");
+  $("kTech").innerHTML=pill(s.technical_bias); $("kVol").textContent=(s.vol_conf==null?"—":s.vol_conf+" / 100");
+  $("volBar").style.width=(s.vol_conf||0)+"%";
+  $("volParts").textContent=s.vol_parts?Object.entries(s.vol_parts).map(([k,v])=>`${k} ${f1(v)}`).join(" · "):"";
+  const rows=[["PCR (ATM ±5)",`${f2(s.pcr)} ${pill(s.pcr_bias)}`],["Weighted PCR (proximity × OI change)",`${f2(s.weighted_pcr)} ${pill(s.weighted_pcr_bias)}`],
+    ["VWAP (nearest futures)",`${f2(s.vwap)} ${pill(s.vwap_bias)} <span class="mini">${s.futures||""}</span>`],["Opening range (first 15 min)",`${f1(s.orb_low)} – ${f1(s.orb_high)} ${pill(s.orb_bias)}`],
+    ["Gap vs avg range",`${sgn(s.gap)} / ${f0(s.avg_range)} ${s.big_gap?pill("LARGE","p-warn"):pill("normal","p-cool")}`],
+    ["India VIX → expected move",`${f2(s.vix)} → ${f0(s.vix_move)} pts; blended with ${f0(s.hist_oc_range)} = <b>${f0(s.expected_move)}</b> pts`],
+    ["Moved from open",`${sgn(s.points_from_open)} pts = ${pct(s.momentum_frac)} of expected ${pill(s.momentum_bias)}`],
+    ["ATM OI change (CE × / PE ×)",`${f2(s.atm_ce_oi_ratio)} / ${f2(s.atm_pe_oi_ratio)} ${pill(s.atm_oi_bias)}`],["AI sentiment",pill(s.ai_sentiment||"NEUTRAL")]];
+  $("sigRows").innerHTML=rows.map(r=>`<tr><td class="mini">${r[0]}</td><td>${r[1]}</td></tr>`).join("");
+  const w=[["Resistance wall (CE OI above ATM)",s.resistance?`${f0(s.resistance)} · OI ${f0(s.resistance_oi)} · ${sgn(s.resistance_dist)} pts · OI ×${f2(s.resistance_oi_ratio)}`:"—"],
+    ["Support wall (PE OI below ATM)",s.support?`${f0(s.support)} · OI ${f0(s.support_oi)} · ${f0(s.support_dist)} pts below · OI ×${f2(s.support_oi_ratio)}`:"—"],
+    ["Base probability (walls)",`UP ${pct(s.base_up)}`],["Required move to profit (×margin)",`CALL ${f1(s.req_call)} · PUT ${f1(s.req_put)} · BOTH ${f1(s.req_both)} pts`],
+    ["Expected move today",`<b>${f0(s.expected_move)}</b> pts ${s.range_too_tight?pill("TOO TIGHT","p-warn"):""}`],["Yesterday CPR width / range",f2(s.cpr_ratio)]];
+  $("wallRows").innerHTML=w.map(r=>`<tr><td class="mini">${r[0]}</td><td>${r[1]}</td></tr>`).join("");
+  // paper
+  const legs=p.legs||[];
+  if(!legs.length){$("paperNone").style.display="";$("paperBox").style.display="none";$("paperNone").textContent=p.status||"No paper position today.";}
+  else{$("paperNone").style.display="none";$("paperBox").style.display="";
+    const tot=legs.reduce((a,l)=>a+(+l.pnl||0),0); $("pnl").textContent=(tot>=0?"+":"")+f0(tot); $("pnl").className="pnl "+(tot>=0?"pos":"neg");
+    $("pnlSub").textContent=`${s.decision||""} · ${p.status||""} · updated ${p.updated||""}`;
+    $("legs").innerHTML=legs.map(l=>`<tr><td>${l.leg} <span class="mini">${l.symbol||""}</span></td><td class="num">${l.qty}</td><td class="num">${f2(l.entry)}</td><td class="num">${f2(l.open?l.ltp:l.exit)}</td><td class="num ${(+l.pnl||0)>=0?"pos":"neg"}">${sgn(l.pnl)}</td><td>${l.open?pill("OPEN","p-good"):pill(l.reason||"CLOSED","p-cool")}</td></tr>`).join("");
+    $("kSl").textContent=`${p.sl_enabled?"−"+f0(p.max_loss):"off"} / ${p.target_enabled?"+"+f0(p.target_profit):"off"}`;
+    $("kForce").textContent=p.force_exit_time||"15:15";
+    $("kMfe").textContent=`${sgn(legs.reduce((a,l)=>a+(+l.mfe||0),0))} / ${sgn(legs.reduce((a,l)=>a+(+l.mae||0),0))}`;}
+  // naksha
+  const B=nk.blocks||{}, T=nk.today||{}, order=["B1","B2","B3","B4"], now=nk.now_block;
+  $("nkKey").textContent=nk.key?`· context: ${nk.key.replace(/\|/g," + ").replace(/_/g," ")} (${nk.n||"?"} days)`:"";
+  $("blocks").innerHTML=order.filter(b=>B[b]).map(b=>{const e=B[b],a=T[b]||{};
+    return `<div class="b ${now===b?"now":""} ${a.done?"done":""}"><h4>${e.label}${now===b?' <span class="pill p-good">NOW</span>':''}</h4>
+    <div class="mini">expected bias <b class="${e.bias>5?"pos":e.bias<-5?"neg":""}">${sgn(e.bias)}</b> · avg move ${f0(e.avg_move)} · range ${f0(e.avg_range)} (${e.range_share}% of day)</div>
+    <div class="mini">day HIGH here ${e.p_high}% · day LOW here ${e.p_low}% · closes up ${e.p_up}%</div>
+    <div class="mini">${b==="B1"?"follows gap":"follows first block"} ${e.continuation==null?"—":e.continuation+"%"} · trend ratio ${e.trend_ratio}</div>
+    <div style="margin-top:4px">${a.move==null?'<span class="mini">actual: —</span>':`actual <b class="${a.move>=0?"pos":"neg"}">${sgn(a.move)}</b> <span class="mini">range ${f0(a.range)}${a.done?"":" (running)"}</span>`}</div></div>`}).join("");
+  const dy=nk.day||{}; $("nkDay").textContent=dy.n?`Days like today: avg day range ${f0(dy.avg_range)} pts, avg open-to-close ${f0(dy.avg_oc)} pts, closes up ${dy.p_up}%, gap filled same day ${dy.gap_fill}%.`:"";
+  // scorecard / trades / history
+  const sc=d.scorecard||{}; $("score").innerHTML=Object.keys(sc).length?Object.entries(sc).map(([k,v])=>`<span>${k}</span><b>${v==null?"—":v}</b>`).join(""):"<span class='sub'>No paper trades yet.</span>";
+  $("tradeRows").innerHTML=(d.trades||[]).map(t=>`<tr><td>${t.date}</td><td>${pill(t.decision,t.decision==="CALL"?"p-good":t.decision==="PUT"?"p-bad":"p-warn")}</td><td>${t.leg}</td><td class="num">${f2(t.entry)}</td><td class="num">${f2(t.exit)}</td><td class="num ${(+t.pnl||0)>=0?"pos":"neg"}">${sgn(t.pnl)}</td><td class="mini">${t.reason||""}</td></tr>`).join("")||"<tr><td colspan=7 class='sub'>—</td></tr>";
+  $("histRows").innerHTML=(d.history||[]).map(h=>`<tr><td>${h.date}</td><td>${h.time}</td><td>${pill(h.decision,h.decision==="CALL"?"p-good":h.decision==="PUT"?"p-bad":h.decision==="BOTH"?"p-warn":"p-cool")}</td><td class="num">${pct(h.up_prob)}</td><td class="num">${f2(h.spot)}</td><td class="num">${sgn(h.gap)}</td><td>${pill(h.pcr_bias)}</td><td>${pill(h.weighted_pcr_bias)}</td><td>${pill(h.vwap_bias)}</td><td>${pill(h.orb_bias)}</td><td class="num">${f2(h.vix)}</td><td class="num">${f0(h.expected_move)}</td><td class="num">${h.vol_conf==null?"—":h.vol_conf}</td><td class="mini">${h.why||""}</td></tr>`).join("")||"<tr><td colspan=14 class='sub'>—</td></tr>";
+}
+render(D);
+// theme
+const th=$("theme");try{const t=localStorage.getItem("algo-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}
+th.onclick=()=>{const cur=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",cur);try{localStorage.setItem("algo-theme",cur)}catch(e){}};
+// live (firebase EventSource) - only in LOCAL / GitHub Pages copy
+(function live(){
+  if(!CFG||!CFG.firebase||typeof EventSource==="undefined") return;
+  const base=CFG.firebase.replace(/\/$/,""); let lastAt=0;
+  function set(txt,c){const e=$("live");e.className="tag "+c;e.innerHTML=txt}
+  function connect(){
+    const es=new EventSource(base+"/live/ALGO.json");
+    es.addEventListener("put",ev=>{try{const j=JSON.parse(ev.data);if(j&&j.data){render(j.data);lastAt=Date.now();set('<span class="dot"></span>LIVE · DHAN',"t-live")}}catch(e){}});
+    es.addEventListener("patch",ev=>{try{const j=JSON.parse(ev.data);if(j&&j.data){render(Object.assign({},D,j.data));lastAt=Date.now()}}catch(e){}});
+    es.onerror=()=>{set("RECONNECTING","t-stale");es.close();setTimeout(connect,5000)};
+  }
+  connect();
+  setInterval(()=>{if(!lastAt)return;const age=(Date.now()-lastAt)/1000;if(age>45)set("STALE "+Math.round(age)+"s","t-stale")},5000);
+})();
+})();
+</script>
+</body>
+</html>
